@@ -114,12 +114,26 @@ class Workspace extends Model
 
     @openUriInPane(uri, pane, options)
 
+
+  preview: (uri, options = {}) ->
+    searchAllPanes = options.searchAllPanes
+    console.log("Preview" + uri);
+    options.preview = true
+    uri = atom.project.resolve(uri)
+
+    pane = @paneContainer.paneForUri(uri) if searchAllPanes
+    pane = @activePane
+
+    @openUriInPane(uri, pane, options)
+
+
+
   # Public: Open Atom's license in the active pane.
   openLicense: ->
-    @open(join(atom.getLoadSettings().resourcePath, 'LICENSE.md'))
+    @open(join(atom.getLoadSettings().resourcePath, 'LICENSE.md') )
 
   # Synchronously open the given URI in the active pane. **Only use this method
-  # in specs. Calling this in production code will block the UI thread and
+  # in specs. Calling this in production atcode will block the UI thread and
   # everyone will be mad at you.**
   #
   # uri - A {String} containing a URI.
@@ -150,7 +164,9 @@ class Workspace extends Model
 
   openUriInPane: (uri, pane, options={}) ->
     changeFocus = options.changeFocus ? true
-
+    preview = options.preview ? true
+    if preview?
+      console.log "Preview True"
     if uri?
       item = pane.itemForUri(uri)
       item ?= opener(atom.project.resolve(uri), options) for opener in @getOpeners() when !item
@@ -161,9 +177,16 @@ class Workspace extends Model
         if not pane
           pane = new Pane(items: [item])
           @paneContainer.root = pane
+
         @itemOpened(item)
         pane.activateItem(item)
         pane.activate() if changeFocus
+        if preview
+          item.isPreview = true
+          if pane.previewItem?
+            pane.removeItem pane.previewItem
+            pane.previewItem.destroy()
+          pane.previewItem = item
         @emit "uri-opened"
         item
       .catch (error) ->

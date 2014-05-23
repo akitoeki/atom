@@ -16,6 +16,7 @@ class Pane extends Model
   @properties
     container: undefined
     activeItem: undefined
+    previewItem: undefined
     focused: false
 
   # Public: Only one pane is considered *active* at a time. A pane is activated
@@ -90,6 +91,14 @@ class Pane extends Model
   # Returns a pane item.
   getActiveItem: ->
     @activeItem
+
+
+  # Public: Get the previewing pane item in this pane.
+  #
+  # Returns a pane item.
+  getPreviewItem: ->
+    @previewItem
+
 
   # Public: Returns an {Editor} if the pane item is an {Editor}, or null
   # otherwise.

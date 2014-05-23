@@ -57,7 +57,7 @@ class WorkspaceView extends View
   Delegator.includeInto(this)
 
   @delegatesProperty 'fullScreen', 'destroyedItemUris', toProperty: 'model'
-  @delegatesMethods 'open', 'openSync',
+  @delegatesMethods 'open', 'openSync', 'preview',
     'saveActivePaneItem', 'saveActivePaneItemAs', 'saveAll', 'destroyActivePaneItem',
     'destroyActivePane', 'increaseFontSize', 'decreaseFontSize', toProperty: 'model'
 
